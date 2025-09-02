@@ -3,25 +3,10 @@ package com.todoteg.models;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name="tbl_producto")
 public class Producto {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(name="nombre_completo", nullable=false, unique=false)
 	private String nombres;
-	@Column(name="descripcion_completa", nullable=false, unique=false)
 	private String descripcion;
 	private BigDecimal precio;
 	private Integer stock;

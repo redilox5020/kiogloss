@@ -1,9 +1,16 @@
 package com.todoteg.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import java.util.Optional;
 
 import com.todoteg.models.Producto;
 
-public interface IProductoRepo extends JpaRepository<Producto, Long> {
+public interface IProductoRepo {
 	
+	List<Producto> findAll();
+	Producto save(Producto newProducto);
+	boolean update(Producto producto);
+	Optional<Producto> findById(Long id);
+	boolean deleteById(Long id);
+	List<Producto> saveAll(List<Producto> newProductos);
 }

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.todoteg.models.Producto;
@@ -14,8 +13,12 @@ import com.todoteg.repository.IProductoRepo;
 @Service
 public class ProductoService {
 	
-	@Autowired
-	private IProductoRepo repo;
+	private final IProductoRepo repo;
+
+    public ProductoService(IProductoRepo productoRepository) {
+        this.repo = productoRepository;
+    }
+	
     
     public List<Producto> Listar(){
     	return repo.findAll();
@@ -30,16 +33,21 @@ public class ProductoService {
 	public Producto actualizar(Long id, Producto productoArg) {
 		Optional<Producto> producto = repo.findById(id);
 		
-		Producto productoDb = producto.get();
 		
-		if(producto.isPresent()) {
-			productoDb.setNombres(productoArg.getNombres());
-			productoDb.setDescripcion(productoArg.getDescripcion());
-			productoDb.setPrecio(productoArg.getPrecio());
-			productoDb.setStock(productoArg.getStock());
-			return repo.save(productoDb);
-		}
-		return repo.save(productoArg);
+		if(!producto.isPresent()) {
+			throw new RuntimeException("No se puede actualizar. Producto con id " + id + " no encontrado.");
+			// return repo.save(productoArg);
+		};
+		
+		Producto productoDb = producto.get();
+		productoDb.setNombres(productoArg.getNombres());
+		productoDb.setDescripcion(productoArg.getDescripcion());
+		productoDb.setPrecio(productoArg.getPrecio());
+		productoDb.setStock(productoArg.getStock());
+		
+		if(repo.update(productoDb)) return productoDb;
+		
+		throw new RuntimeException("La actualización en la base de datos no afectó ninguna fila para el id: " + id);
 	}
 	
 	public Optional<Producto> obtenerUno(Long id) {
