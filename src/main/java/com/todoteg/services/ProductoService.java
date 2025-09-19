@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.todoteg.exception.EntityNotFoundException;
 import com.todoteg.models.Producto;
 import com.todoteg.repository.IProductoRepo;
 
@@ -21,6 +22,7 @@ public class ProductoService {
 	
     
     public List<Producto> Listar(){
+    	
     	return repo.findAll();
     }
     
@@ -50,8 +52,13 @@ public class ProductoService {
 		throw new RuntimeException("La actualización en la base de datos no afectó ninguna fila para el id: " + id);
 	}
 	
-	public Optional<Producto> obtenerUno(Long id) {
-		return repo.findById(id);
+	public Producto obtenerUno(Long id) {
+		Producto producto= repo.findById(id).orElse(null);
+		
+		if(producto == null) {
+			throw new EntityNotFoundException("Id no encontrado " + id);
+		}
+		return producto;
 	}
 	
 	public void eliminar(Long id) {
